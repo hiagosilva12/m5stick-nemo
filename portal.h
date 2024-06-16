@@ -272,7 +272,6 @@ String ssid_POST()
 
 String clear_GET()
 {
-  String email = "<p></p>";
   String password = "<p></p>";
   capturedCredentialsHtml = "<p></p>";
   totalCapturedCredentials = 0;
